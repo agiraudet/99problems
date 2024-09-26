@@ -175,3 +175,29 @@ let insert_at e p = function
 let range lo hi =
   let rec aux hi acc = if hi < lo then acc else aux (hi - 1) (hi :: acc) in
   aux hi []
+
+(* Extract a Given Number of Randomly Selected Elements From a List  *)
+let rand_select lst n =
+  let pop_at k lst =
+    let rec aux acc n = function
+      | [] -> failwith "Index out of range"
+      | h :: t ->
+          if n = k then (h, List.rev acc @ t) else aux (h :: acc) (n + 1) t
+    in
+    aux [] 0 lst
+  in
+  let rec aux acc n lst =
+    if n > 0 then
+      let e, l = pop_at (Random.int @@ length lst) lst in
+      aux (e :: acc) (n - 1) l
+    else acc
+  in
+  aux [] n lst
+
+(* Lotto: Draw N Different Random Numbers From the Set 1..M *)
+let lotto_select n hi = rand_select (range 1 hi) n
+
+(* Generate a Random Permutation of the Elements of a List  *)
+let permutation = function [] -> [] | lst -> rand_select lst (length lst)
+
+(* Generate the Combinations of K Distinct Objects Chosen From the N Elements of a List  *)
